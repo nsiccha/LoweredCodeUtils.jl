@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "line": {
+    "repo": "nsiccha/LoweredCodeUtils.jl",
+    "ref": "dogfood",
+    "sha": "291b4995568a0b216d0e587e4d4ac689435b8141"
+  },
+  "upstream": {
+    "repo": "JuliaDebug/LoweredCodeUtils.jl",
+    "ref": "master",
+    "sha": "6f5c109b054a9f5c04aa042e6fe958fd4cd4f6b7"
+  },
+  "prepared_at": "2026-11-18T12:16:30Z",
+  "problems": [
+    {
+      "id": "quoted-callable",
+      "role": "fix",
+      "title": "Signature extraction calls nameof on a quoted callable value",
+      "summary": "A macro can embed a callable struct as a literal callee. The method can be evaluated in Julia, but signature extraction throws a MethodError when it tries to name the struct instance.",
+      "repairs": [],
+      "upstream_refs": [
+        {
+          "url": "https://github.com/JuliaDebug/LoweredCodeUtils.jl/pull/176",
+          "relation": "fixes"
+        },
+        {
+          "url": "https://github.com/JuliaDebug/LoweredCodeUtils.jl/pull/149",
+          "relation": "related"
+        }
+      ],
+      "draft": {
+        "title": "Signature extraction calls nameof on a quoted callable value",
+        "body": "A macro can embed a callable struct as a literal callee. The method can be evaluated in Julia, but signature extraction throws a MethodError when it tries to name the struct instance.\n\n```julia\nusing LoweredCodeUtils\nstruct Offset\n    n::Int\nend\n(o::Offset)(x) = x + o.n\nq = QuoteNode(Offset(2))\nLoweredCodeUtils.normalize_defsig(q, Main) === q  # expected true\n```\n\nA quoted instance is a value and has no function name. The fix preserves it as a QuoteNode while retaining symbol and named function, type and module handling. The regression also walks a complete macro-style method definition and executes it.",
+        "prepared_at": "2026-11-18T12:16:30Z"
+      },
+      "fix": {
+        "branch": "fix/quoted-callable-callee",
+        "commits": [
+          {
+            "sha": "291b4995568a0b216d0e587e4d4ac689435b8141",
+            "title": "Leave a quoted callee that has no name alone in normalize_defsig",
+            "original": [
+              "291b4995568a0b216d0e587e4d4ac689435b8141"
+            ]
+          }
+        ],
+        "why_together": "One commit changes callee normalization and tests both the quoted value and the complete method-definition walk."
+      },
+      "depends_on": [],
+      "requires": [],
+      "validation": [
+        {
+          "base": "6f5c109b054a9f5c04aa042e6fe958fd4cd4f6b7",
+          "julia": "1.10.12",
+          "bounds": "forced",
+          "tests": [
+            "test/signatures.jl"
+          ],
+          "result": "passed",
+          "detail": "99 of 99 assertions passed on the dogfood commit, including quoted callable normalization and method-definition traversal."
+        }
+      ]
+    }
+  ]
+}
