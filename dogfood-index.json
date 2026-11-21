@@ -3,14 +3,14 @@
   "line": {
     "repo": "nsiccha/LoweredCodeUtils.jl",
     "ref": "dogfood",
-    "sha": "291b4995568a0b216d0e587e4d4ac689435b8141"
+    "sha": "2f6972ea8dfa0fddec27abf172105c3b69f41843"
   },
   "upstream": {
     "repo": "JuliaDebug/LoweredCodeUtils.jl",
     "ref": "master",
-    "sha": "6f5c109b054a9f5c04aa042e6fe958fd4cd4f6b7"
+    "sha": "180e12816f7f31be78b813eeea39910cf27fe03b"
   },
-  "prepared_at": "2026-11-18T12:16:30Z",
+  "prepared_at": "2026-11-21T11:36:32Z",
   "problems": [
     {
       "id": "quoted-callable",
@@ -58,6 +58,17 @@
           ],
           "result": "passed",
           "detail": "99 of 99 assertions passed on the dogfood commit, including quoted callable normalization and method-definition traversal."
+        },
+        {
+          "base": "180e12816f7f31be78b813eeea39910cf27fe03b",
+          "julia": "1.10.12",
+          "bounds": "forced",
+          "tests": [
+            "test/runtests.jl",
+            "Precompile workload temporaries stay local"
+          ],
+          "result": "passed",
+          "detail": "On integrated commit 2f6972ea8dfa0fddec27abf172105c3b69f41843, LoweredCodeUtils precompiled with PrecompileTools 1.2.1. All 185 package tests passed, including the quoted-callable regression, and five checks confirmed the workload kept its temporaries local."
         }
       ]
     }
